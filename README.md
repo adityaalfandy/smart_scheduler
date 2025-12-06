@@ -69,13 +69,12 @@ source venv/bin/activate
 
 ### 3. Install Library Python
 
-Install semua dependensi yang dibutuhkan (Flask, Pandas, SQLAlchemy, dll).
+Install semua dependensi yang dibutuhkan.
 
 ```bash
 pip install -r requirements.txt
 ```
 
-(Jika file `requirements.txt` belum ada, lihat bagian lampiran di bawah)
 
 ### 4. Setup Database (XAMPP)
 
