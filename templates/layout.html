@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Penjadwalan Cerdas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        /* Scrollbar kustom */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-slate-50 flex h-screen overflow-hidden text-slate-800">
+
+    <aside class="w-64 bg-slate-900 text-white flex-col hidden md:flex shadow-2xl z-20">
+        <div class="h-20 flex items-center justify-center border-b border-slate-700 bg-slate-900">
+            <div class="text-center">
+                <h1 class="text-xl font-bold text-cyan-400 tracking-wider">SCHEDULER<span class="text-white">AI</span></h1>
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest mt-1">Genetic Algorithm</p>
+            </div>
+        </div>
+        
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <p class="px-4 text-xs font-bold text-slate-500 uppercase mb-2">Menu Utama</p>
+            
+            <a href="/" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white {% if request.path == '/' %} bg-cyan-600 text-white shadow-lg shadow-cyan-500/30 {% else %} text-slate-400 {% endif %} transition group">
+                <span class="text-lg">📊</span> 
+                <span class="font-medium">Dashboard</span>
+            </a>
+            
+            <a href="/hasil" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white {% if request.path == '/hasil' %} bg-cyan-600 text-white shadow-lg shadow-cyan-500/30 {% else %} text-slate-400 {% endif %} transition group">
+                <span class="text-lg group-hover:scale-110 transition">🗓️</span> 
+                <span class="font-medium">Hasil Jadwal</span>
+            </a>
+
+            <a href="/dosen" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white {% if request.path == '/dosen' %} bg-cyan-600 text-white shadow-lg shadow-cyan-500/30 {% else %} text-slate-400 {% endif %} transition group">
+                <span class="text-lg group-hover:scale-110 transition">👨‍🏫</span> 
+                <span>Data Dosen</span>
+            </a>
+
+            <div class="pt-8">
+                <p class="px-4 text-xs font-bold text-slate-500 uppercase mb-2">System</p>
+                <a href="/reset_db" onclick="return confirm('Yakin hapus SEMUA data Matkul & Ruangan?')" class="flex items-center gap-3 px-4 py-3 rounded-xl text-rose-400 hover:bg-rose-900/30 hover:text-rose-300 transition group">
+                    <span class="text-lg">🗑️</span> 
+                    <span>Reset Database</span>
+                </a>
+            </div>
+        </nav>
+        
+        <div class="p-4 border-t border-slate-800 text-xs text-slate-600 text-center">
+            &copy; 2025 Smart Campus Project
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        <header class="md:hidden h-16 bg-white shadow-sm flex items-center justify-between px-4 z-10">
+            <span class="font-bold text-lg text-cyan-600">Scheduler AI</span>
+            <button class="text-slate-500">☰</button>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-6 md:p-10 scroll-smooth">
+            <div class="max-w-7xl mx-auto">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <div class="mb-8 space-y-3" x-data="{ show: true }" x-show="show">
+                            {% for category, message in messages %}
+                            <div class="p-4 rounded-xl shadow-sm text-white font-medium flex justify-between items-center animate-fade-in-down
+                                {% if category == 'error' %} bg-gradient-to-r from-rose-500 to-red-600 
+                                {% else %} bg-gradient-to-r from-emerald-500 to-green-600 {% endif %}">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xl">{% if category == 'error' %}⚠️{% else %}✅{% endif %}</span>
+                                    <span>{{ message }}</span>
+                                </div>
+                                <button @click="show = false" class="opacity-70 hover:opacity-100 transition">✕</button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </main>
+</body>
+</html>

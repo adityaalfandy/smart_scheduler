@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    
+    <div class="flex flex-col md:flex-row justify-between items-end mb-8">
+        <div>
+            <h2 class="text-3xl font-bold text-slate-800">Data & Beban Dosen</h2>
+            <p class="text-slate-500 mt-1">Rekapitulasi total SKS yang diampu setiap dosen.</p>
+        </div>
+        <div class="mt-4 md:mt-0">
+             <div class="flex gap-2 text-xs font-bold">
+                <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-yellow-400"></span> < 12 SKS (Kurang)</span>
+                <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-emerald-500"></span> 12-16 SKS (Ideal)</span>
+                <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-rose-500"></span> > 16 SKS (Overload)</span>
+             </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-slate-900 text-white uppercase text-xs font-bold">
+                    <tr>
+                        <th class="px-6 py-4 w-10">No</th>
+                        <th class="px-6 py-4">Nama Dosen</th>
+                        <th class="px-6 py-4 text-center">Jml Kelas</th>
+                        <th class="px-6 py-4 text-center">Total SKS</th>
+                        <th class="px-6 py-4">Status Beban</th>
+                        <th class="px-6 py-4">Detail Mata Kuliah</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    {% for dosen in lecturers %}
+                    <tr class="hover:bg-slate-50 transition group">
+                        <td class="px-6 py-4 text-slate-400">{{ loop.index }}</td>
+                        
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-slate-200 to-slate-300 flex items-center justify-center text-slate-600 font-bold text-lg shadow-inner">
+                                    {{ dosen.nama[:1] }}
+                                </div>
+                                <span class="font-bold text-slate-700 text-base">{{ dosen.nama }}</span>
+                            </div>
+                        </td>
+
+                        <td class="px-6 py-4 text-center">
+                            <span class="bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-mono font-bold">
+                                {{ dosen.total_kelas }}
+                            </span>
+                        </td>
+
+                        <td class="px-6 py-4 text-center">
+                            <span class="text-lg font-bold text-slate-800">{{ dosen.total_sks }}</span>
+                        </td>
+
+                        <td class="px-6 py-4">
+                            {% if dosen.total_sks < 12 %}
+                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-700 border border-yellow-200">
+                                    ⚠️ Underload
+                                </span>
+                            {% elif dosen.total_sks >= 12 and dosen.total_sks <= 16 %}
+                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-200">
+                                    ✅ Ideal
+                                </span>
+                            {% else %}
+                                <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700 border border-rose-200">
+                                    🔥 Overload
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <details class="group cursor-pointer">
+                                <summary class="text-cyan-600 text-xs font-bold hover:underline list-none flex items-center gap-1">
+                                    <span>Lihat Daftar</span>
+                                    <svg class="w-3 h-3 transition group-open:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </summary>
+                                <ul class="mt-2 text-xs text-slate-500 space-y-1 bg-slate-50 p-3 rounded border border-slate-200">
+                                    {% for mk in dosen.daftar_matkul %}
+                                        <li>• {{ mk }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </details>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    
+                    {% if not lecturers %}
+                    <tr>
+                        <td colspan="6" class="p-8 text-center text-slate-400 italic bg-slate-50">
+                            Belum ada data dosen. Silakan upload data mata kuliah terlebih dahulu.
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
